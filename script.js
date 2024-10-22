@@ -20,8 +20,23 @@ const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
 const dirtMaterial = new THREE.MeshBasicMaterial({ color: 0x8B4513 });
 const outlineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
 
+
 const cubes = [];
 const outlines = [];
+
+const frustumBuffer = 1.5;
+
+function isCubeVisible(cube) {
+    const frustum = new THREE.Frustum();
+    const cameraViewProjectionMatrix = new THREE.Matrix4();
+    cameraViewProjectionMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+    frustum.setFromProjectionMatrix(cameraViewProjectionMatrix);
+
+    const box = new THREE.Box3().setFromObject(cube);
+    box.expandByScalar(frustumBuffer);
+
+    return frustum.intersectsBox(box);
+}
 
 let outlinesVisible = true;
 
@@ -219,6 +234,8 @@ function updateFPS() {
     }
 }
 
+const visibleCubes = new Set();
+
 function animate() {
     if (!isPaused) {
         requestAnimationFrame(animate);
@@ -229,6 +246,15 @@ function animate() {
         controls.moveRight(moveX * moveSpeed);
         controls.moveForward(moveZ * moveSpeed);
 
+        cubes.forEach(cube => {
+            if (isCubeVisible(cube)) {
+                visibleCubes.add(cube);
+                cube.visible = true;
+            } else {
+                visibleCubes.delete(cube);
+                cube.visible = false;
+            }
+        });
         if (isJumping) {
             camera.position.y += velocityY;
             velocityY -= gravity;
@@ -251,7 +277,6 @@ function animate() {
     renderer.render(scene, camera);
     updateFPS();
 }
-
 
 animate();
 
