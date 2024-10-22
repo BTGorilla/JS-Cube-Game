@@ -1,0 +1,38 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRAFTMINE</title>
+    <link href="style.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <div class="crosshair"></div>
+    <div class="pause-screen" id="pauseScreen">
+        <h1>Paused</h1>
+        <div class="toprow">
+            <button type="button" onclick="toggleOutlines()">Toggle Outlines</button></div>
+        <button id="resumeButton" type="button" onclick="resumeGame()">Resume</button>
+        <button type="button" onclick="resetGame()">Reset</button>
+        <button type="button" onclick="closeGame()">Leave</button>
+    </div>
+    <div class="inventory" id="inventory">
+        <div class="slot selected white" data-color="0xffffff">1</div>
+        <div class="slot black" data-color="0x000000">2</div>
+        <div class="slot red" data-color="0xff0000">3</div>
+        <div class="slot orange" data-color="0xffa500">4</div>
+        <div class="slot yellow" data-color="0xffff00">5</div>
+        <div class="slot green" data-color="0x008000">6</div>
+        <div class="slot blue" data-color="0x0000ff">7</div>
+        <div class="slot indigo" data-color="0x4b0082">8</div>
+        <div class="slot violet" data-color="0xee82ee">9</div>
+        <div class="slot gray" data-color="0x808080">0</div>
+    </div>
+    <div class="fps-counter" id="fpsCounter">FPS: 0</div>
+</body>
+
+</html>
