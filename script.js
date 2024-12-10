@@ -236,15 +236,21 @@ function updateFPS() {
 
 const visibleCubes = new Set();
 
+let lastTime = performance.now();
+
 function animate() {
+    const now = performance.now();
+    const deltaTime = (now - lastTime) / 1000;
+    lastTime = now;
+
     if (!isPaused) {
         requestAnimationFrame(animate);
 
         const moveX = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
         const moveZ = (keys.forward ? 1 : 0) - (keys.backward ? 1 : 0);
 
-        controls.moveRight(moveX * moveSpeed);
-        controls.moveForward(moveZ * moveSpeed);
+        controls.moveRight(moveX * moveSpeed * deltaTime);
+        controls.moveForward(moveZ * moveSpeed * deltaTime);
 
         cubes.forEach(cube => {
             if (isCubeVisible(cube)) {
@@ -255,9 +261,10 @@ function animate() {
                 cube.visible = false;
             }
         });
+
         if (isJumping) {
-            camera.position.y += velocityY;
-            velocityY -= gravity;
+            camera.position.y += velocityY * deltaTime;
+            velocityY -= gravity * deltaTime;
 
             if (camera.position.y <= 2) {
                 camera.position.y = 2;
@@ -265,10 +272,10 @@ function animate() {
                 velocityY = 0;
             }
         } else if (isFloating) {
-            camera.position.y += moveSpeed;
+            camera.position.y += moveSpeed * deltaTime;
         }
     } else if (camera.position.y > 2) {
-        camera.position.y -= gravity;
+        camera.position.y -= gravity * deltaTime;
         if (camera.position.y < 2) {
             camera.position.y = 2;
         }
@@ -277,7 +284,6 @@ function animate() {
     renderer.render(scene, camera);
     updateFPS();
 }
-
 animate();
 
 window.addEventListener('resize', () => {
